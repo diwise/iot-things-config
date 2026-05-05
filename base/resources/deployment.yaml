@@ -23,6 +23,7 @@ spec:
               value: rabbitmq
           image: ghcr.io/diwise/iot-things:changeme
           imagePullPolicy: IfNotPresent
+          name: iot-things
           ports:
             - containerPort: 8080
               name: default-port
