@@ -23,15 +23,25 @@ spec:
               value: rabbitmq
           image: ghcr.io/diwise/iot-things:changeme
           imagePullPolicy: IfNotPresent
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: default-port
-          name: iot-things
           ports:
             - containerPort: 8080
               name: default-port
               protocol: TCP
+            - containerPort: 8000
+              name: control-port
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: control-port
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: control-port
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: control-port          
           resources:
             limits:
               cpu: 500m
@@ -39,10 +49,6 @@ spec:
             requests:
               cpu: 50m
               memory: 100Mi
-          startupProbe:
-            httpGet:
-              path: /health
-              port: default-port
           volumeMounts:
             - name: conf-volume
               mountPath: /opt/diwise/config
